@@ -1,0 +1,20 @@
+name: Build Team React App
+
+
+on:
+  push:
+    branches: [main]  
+
+  workflow_dispatch:
+
+
+
+
+jobs:
+  Build:
+
+    runs-on: self-hosted
+
+    steps:
+      - name: Setup Node JS
+      
