@@ -2,8 +2,8 @@ name: Build Team React App
 
 
 on:
-  push:
-    branches: [main]  
+  # push:
+  #   branches: [main]  
 
   workflow_dispatch:
 
@@ -16,5 +16,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
+
+      - name: Checkout Repo
+        uses: actions/checkout@v5.0.0
+        
       - name: Setup Node JS
+        
       
