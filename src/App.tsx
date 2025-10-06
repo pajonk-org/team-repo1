@@ -33,7 +33,9 @@ function App() {
   
   return (
     <>
-      <div className="text-red-500">x</div>
+      <div className="text-red-500">
+        <h1 className="font-bolder text-green flex justify-center items-center underline">Users List</h1>
+      </div>
       
     </>
   )
