@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  react-app:
+    image: team-app1
+    container_name: team-app1
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    ports:
+      - "82:82"
+    restart: unless-stopped
