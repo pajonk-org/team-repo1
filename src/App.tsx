@@ -35,6 +35,15 @@ function App() {
     <>
       <div className="text-red-500">
         <h1 className="font-bolder text-green flex justify-center items-center underline">Users List</h1>
+        <div>
+          { users && users?.map(user) => (
+            <div key={users.id}>
+              <p>User<span>{users?.username}</span></p>
+            </div>
+          )}
+
+          {error && <div className="text-red-500 font-bold border bg-amber-600">{error.messae}</div>}
+        </div>
       </div>
       
     </>
