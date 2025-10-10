@@ -58,6 +58,9 @@ function App() {
                 <p className="text-gray-200">
                   <span className="font-semibold text-gray-300">Phone:</span> {user.phone}
                 </p>
+                <p className="text-gray-200">
+                  <span className="font-semibold text-gray-300">Website:</span> {user.website}
+                </p>
               </div>
             </div>
           ))}
