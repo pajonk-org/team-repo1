@@ -50,16 +50,19 @@ function App() {
               </h2>
               <div className="grid grid-cols-1 gap-1">
                 <p className="text-gray-200">
-                  <span className="font-semibold text-gray-300">Email:</span> {user.email}
+                  <span className="font-semibold text-gray-300">Email:</span> {user?.email}
                 </p>
                 <p className="text-gray-200">
-                  <span className="font-semibold text-gray-300">Name:</span> {user.name}
+                  <span className="font-semibold text-gray-300">Name:</span> {user?.name}
                 </p>
                 <p className="text-gray-200">
-                  <span className="font-semibold text-gray-300">Phone:</span> {user.phone}
+                  <span className="font-semibold text-gray-300">Phone:</span> {user?.phone}
                 </p>
                 <p className="text-gray-200">
-                  <span className="font-semibold text-gray-300">Website:</span> {user.website}
+                  <span className="font-semibold text-gray-300">Website:</span> {user?.website}
+                </p>
+                <p className="text-gray-200">
+                  <span className="font-semibold text-gray-300">Company:</span> {user?.company?.name}
                 </p>
               </div>
             </div>
