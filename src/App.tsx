@@ -35,22 +35,43 @@ function App() {
   
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 text-gray800 p-6">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 text-gray-800 p-6">
         <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List</h1>
-        <div className="w-full max-w-5xl bg-gray-700 shadow-lg rounded-2xl p-4 grid grid-cols-2 gap-2">
-          { users && users?.map(user => (
-            <div key={user.id}>
-              <p className='text-lg font-semibold  text-white '>User: <span className='text-green-500 hover:bg-gray-800 cursor-pointer'>{user?.username}</span></p>
+  
+        {/* Outer grid: displays user cards */}
+        <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {users && users.map(user => (
+            <div
+              key={user.id}
+              className="bg-gray-700 border border-gray-500 rounded-2xl p-6 shadow-lg hover:shadow-xl hover:bg-gray-600 transition"
+            >
+              <h2 className="text-xl font-semibold text-green-400 mb-2">
+                {user.username}
+              </h2>
+              <div className="grid grid-cols-1 gap-1">
+                <p className="text-gray-200">
+                  <span className="font-semibold text-gray-300">Email:</span> {user.email}
+                </p>
+                <p className="text-gray-200">
+                  <span className="font-semibold text-gray-300">Name:</span> {user.name}
+                </p>
+                <p className="text-gray-200">
+                  <span className="font-semibold text-gray-300">Phone:</span> {user.phone}
+                </p>
+              </div>
             </div>
-          )
-        )}
-
-          {error && <div className="text-red-500 text-center ">{error}</div>}
+          ))}
+  
+          {error && (
+            <div className="text-red-500 text-center col-span-full">
+              {error}
+            </div>
+          )}
         </div>
       </div>
-      
     </>
-  )
+  );
+  
 }
 
 export default App
