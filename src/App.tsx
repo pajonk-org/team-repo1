@@ -64,7 +64,7 @@ function App() {
                 <p className="text-gray-200">
                   <span className="font-semibold text-gray-300">Company:</span> {user?.company?.name}
                 </p>
-              </div>
+              </div> 
             </div>
           ))}
   
