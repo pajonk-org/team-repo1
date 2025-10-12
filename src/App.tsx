@@ -8,6 +8,7 @@ function App() {
 
   const [ users, setUsers ] = useState<any[]>([])
   const [ albums, setAlbums ] = useState<any[]>([])
+  const [ photos, setPhotos ] = useState<any[]>([])
   const [ error, setError ] = useState<string | null>(null)
   const [ loading, setLoading ] = useState<boolean>(false)
 
@@ -47,11 +48,28 @@ function App() {
   }
 
 
+  const getPhotos = async () => {
+    try {
+      const response = await axios.get('http://jsonplaceholder.typicode.com/photos')
+      console.log(response?.data)
+      setPhotos(response?.data)
+    }catch(error) {
+      if (axios.isAxiosError(error)){
+        setError(error.message)
+      }else if (error instanceof Error){
+        setError(error.message)
+      } else {
+        setError("Uknown error when fetching photos")
+      }
+    }
+  }
+
   const promiseAll = () => {
     setLoading(true)
     Promise.all([
       getUsers(),
-      getAlbums()
+      getAlbums(),
+      getPhotos()
     ]).finally(() =>  setLoading(false))
   }
 
@@ -94,21 +112,37 @@ function App() {
             </div>
           ))}
   
-          {error && (
-            <div className="text-red-500 text-center col-span-full">
-              {error}
-            </div>
-          )}
+       
         </div>
 
         {/*Outer for Albums */}
-        <div className='grid grid-cols-1 text-2xl gap-2 mt-5'>
+        <div className='grid grid-cols-4  w-full max-w-6xl gap-2 mt-5'>
           {albums && albums?.map(album => (
-            <div key={album.id} className='border border-gray-500 rounded-2xl bg-gray-700 p-2'>
+            <div key={album.id} className='border border-gray-500 rounded-2xl bg-gray-700 p-2 hover:bg-gray-600'>
               <h1 className='text-white'>Title: <span className='text-green-500'>{album.title}</span></h1>
             </div>
           ))}
         </div>
+
+
+        {/*Outer for Photos */}
+        <div className='grid grid-cols-6 w-full max-w-6xl gap 2 mt-10'>
+          { photos && photos?.map(photo => (
+            <div key={photo.id} className='border border-gray-500 rounded-2xl bg-gray-700 p2 hover:bg-gray-600 p-2'>
+              <h1 className='text-white'>Photo</h1>
+              <img className='rounded-lg mb-2'
+               src={photo?.thumbnailUrl} alt={photo?.title}
+               />
+              
+            </div>
+          ))}
+        </div>
+
+        {error && (
+            <div className="text-red-500 text-center col-span-full">
+              {error}
+            </div>
+          )}
       </div>
     </>
   );
