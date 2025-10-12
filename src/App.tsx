@@ -7,10 +7,12 @@ function App() {
 
 
   const [ users, setUsers ] = useState<any[]>([])
+  const [ albums, setAlbums ] = useState<any[]>([])
   const [ error, setError ] = useState<string | null>(null)
+  const [ loading, setLoading ] = useState<boolean>(false)
 
 
-  const getData = async() => {
+  const getUsers = async() => {
     try {
       const response = await axios.get('http://jsonplaceholder.typicode.com/users')
       console.log(response?.data)
@@ -22,15 +24,39 @@ function App() {
       } else if (error instanceof Error) {
         setError(error.message)
       } else {
-        setError('Uknown error')
+        setError('Uknown error when fetching users')
+      }
+    }
+  }
+
+  const getAlbums = async () => {
+    try {
+      const resposne = await axios.get('http://jsonplaceholder.typicode.com/albums')
+      console.log(resposne?.data)
+      setAlbums(resposne?.data)
+    }catch(error) {
+      console.error(error)
+      if (axios.isAxiosError(error)) {
+        setError(error.message)
+      }else if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError("Uknown error when fetching albmus")
       }
     }
   }
 
 
+  const promiseAll = () => {
+    setLoading(true)
+    Promise.all([
+      getUsers(),
+      getAlbums()
+    ]).finally(() =>  setLoading(false))
+  }
 
   useEffect(() => {
-    getData()
+    promiseAll()
   }, [])
   
   return (
