@@ -100,6 +100,15 @@ function App() {
             </div>
           )}
         </div>
+
+        {/*Outer for Albums */}
+        <div className='grid grid-cols-1 text-2xl gap-2 mt-5'>
+          {albums && albums?.map(album => (
+            <div key={album.id} className='border border-gray-500 rounded-2xl bg-gray-700 p-2'>
+              <h1 className='text-white'>Title: <span className='text-green-500'>{album.title}</span></h1>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
