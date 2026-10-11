@@ -1,13 +1,23 @@
-FROM nginx:stable-alpine 
 
-RUN rm /etc/nginx/conf.d/default.conf 
+# Stage 1: Build React app
+FROM node:24-alpine AS build
 
+WORKDIR /app
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf 
+COPY package*.json ./
+RUN npm ci
 
+COPY . .
+RUN npm run build
 
-COPY ./dist /usr/share/nginx/html
+# Stage 2: Serve with Nginx
+FROM nginx:stable-alpine
 
+RUN rm -f /etc/nginx/conf.d/default.conf
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 82
+
 CMD ["nginx", "-g", "daemon off;"]

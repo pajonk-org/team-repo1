@@ -50,4 +50,4 @@ jobs:
           docker compose down || true
           docker compose up -d --build
           docker ps
-          docker logs team-app1
+          docker logs --tail 100 team-app1
