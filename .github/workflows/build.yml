@@ -25,7 +25,9 @@ jobs:
           node-version: 24
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm install -D vitest
 
       - name: Run Tests
         run: npm test
