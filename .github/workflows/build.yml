@@ -1,54 +1,51 @@
-name: Build Team React App
 
+name: Test and Deploy React App
 
 on:
+  pull_request:
+    branches: [main]
   push:
-    branches: [main]  
-  # pull_request:
-  #   branches: [main]
+    branches: [main]
 
-  workflow_dispatch:
-
-
-
+permissions:
+  contents: read
 
 jobs:
-  Build:
-
+  Test:
+    name: test
     runs-on: self-hosted
 
     steps:
-
       - name: Checkout Repo
-        uses: actions/checkout@v5.0.0
-        
-      - name: Setup Node JS
-        uses: actions/setup-node@v5.0.0
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
         with:
-          node-version: 24.9.0
+          node-version: 24
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test
 
       - name: Build App
         run: npm run build
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: build-artifact
-          path: dist
-
   Deploy:
-    needs: Build
+    name: deploy
+    needs: Test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: self-hosted
 
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v5
+
       - name: Deploy Using Docker Compose
         run: |
-          cd $GITHUB_WORKSPACE
           docker compose down || true
           docker compose up -d --build
           docker ps
           docker logs team-app1
-    
