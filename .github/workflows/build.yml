@@ -43,17 +43,21 @@ jobs:
 
   Build:
     name: Build App
+    needs: Test
     runs-on: self-hosted
-
+  
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v5
-
-      - name: Setup Node,.js
+  
+      - name: Setup Node.js
         uses: actions/setup-node@v5
-
+        with:
+          node-version: 24
+  
       - name: Install Dependencies
         run: npm ci
+  
       - name: Build App
         run: npm run build
     
