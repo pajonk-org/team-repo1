@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   Test:
-    name: test
+    name: Test
     runs-on: self-hosted
 
     steps:
@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actitons/checkout@v5
+        uses: actions/checkout@v5
 
       - name: Setup Node,.js
         uses: actions/setup-node@v5
@@ -62,7 +62,7 @@ jobs:
 
   Deploy:
     name: deploy
-    needs: Test
+    needs: [Test, Build]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: self-hosted
 
