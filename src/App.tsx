@@ -75,8 +75,8 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50] text-gray-800 p-6">
-        <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List v1</h1>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50] text-black p-6">
+        <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List version 1</h1>
 
         {/* USERS */}
         <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
