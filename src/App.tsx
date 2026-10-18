@@ -1,66 +1,77 @@
-import { useState, useEffect } from 'react'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
+interface User {
+  id: number
+  name: string
+  username: string
+  email: string
+  phone: string
+  website: string
+  company?: {
+    name: string
+  }
+}
+
+interface Album {
+  id: number
+  userId: number
+  title: string
+}
+
+interface Photo {
+  id: number
+  albumId: number
+  title: string
+  url: string
+  thumbnailUrl: string
+}
+
 function App() {
-  const [users, setUsers] = useState<any[]>([])
-  const [albums, setAlbums] = useState<any[]>([])
-  const [photos, setPhotos] = useState<any[]>([])
+  const [users, setUsers] = useState<User[]>([])
+  const [albums, setAlbums] = useState<Album[]>([])
+  const [photos, setPhotos] = useState<Photo[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
 
-  // pagination state
   const [currentPage, setCurrentPage] = useState<number>(1)
   const photosPerPage = 20
 
-  const getUsers = async () => {
-    try {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/users')
-      setUsers(response.data)
-    } catch (error) {
-      handleError(error, 'fetching users')
-    }
-  }
-
-  const getAlbums = async () => {
-    try {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/albums')
-      setAlbums(response.data)
-    } catch (error) {
-      handleError(error, 'fetching albums')
-    }
-  }
-
-  const getPhotos = async () => {
-    try {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/photos')
-      setPhotos(response.data)
-    } catch (error) {
-      handleError(error, 'fetching photos')
-    }
-  }
-
-  const handleError = (error: unknown, context: string) => {
-    console.error(error)
-    if (axios.isAxiosError(error)) {
-      setError(`Axios error while ${context}: ${error.message}`)
-    } else if (error instanceof Error) {
-      setError(`Error while ${context}: ${error.message}`)
+  const handleError = (err: unknown, context: string) => {
+    console.error(err)
+    if (axios.isAxiosError(err)) {
+      setError(`Axios error while ${context}: ${err.message}`)
+    } else if (err instanceof Error) {
+      setError(`Error while ${context}: ${err.message}`)
     } else {
       setError(`Unknown error while ${context}`)
     }
   }
 
-  const promiseAll = () => {
+  const fetchAllData = async () => {
     setLoading(true)
-    Promise.all([getUsers(), getAlbums(), getPhotos()]).finally(() => setLoading(false))
+    setError(null)
+    try {
+      const [usersRes, albumsRes, photosRes] = await Promise.all([
+        axios.get<User[]>('https://jsonplaceholder.typicode.com/users'),
+        axios.get<Album[]>('https://jsonplaceholder.typicode.com/albums'),
+        axios.get<Photo[]>('https://jsonplaceholder.typicode.com/photos')
+      ])
+
+      setUsers(usersRes.data)
+      setAlbums(albumsRes.data)
+      setPhotos(photosRes.data)
+    } catch (err) {
+      handleError(err, 'fetching data')
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
-    promiseAll()
+    fetchAllData()
   }, [])
 
-  // Pagination logic
   const totalPages = Math.ceil(photos.length / photosPerPage)
   const startIndex = (currentPage - 1) * photosPerPage
   const currentPhotos = photos.slice(startIndex, startIndex + photosPerPage)
@@ -74,11 +85,12 @@ function App() {
   }
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50] text-black p-6">
-        <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List version 1</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-gray-800 p-6">
+      <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List v2</h1>
 
-        {/* USERS */}
+      {loading && <div className="text-gray-200 text-xl my-8">Loading data...</div>}
+
+      {!loading && (
         <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {users.map((user) => (
             <div
@@ -96,44 +108,47 @@ function App() {
             </div>
           ))}
         </div>
+      )}
 
-        {/* ALBUMS */}
-        <div className="grid grid-cols-4 w-full max-w-6xl gap-2 mt-5">
+      {!loading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 w-full max-w-6xl gap-2 mt-5">
           {albums.map((album) => (
             <div
               key={album.id}
               className="border border-gray-500 rounded-2xl bg-gray-700 p-2 hover:bg-gray-600"
             >
-              <h1 className="text-white">
+              <h3 className="text-white">
                 Title: <span className="text-green-500">{album.title}</span>
-              </h1>
+              </h3>
             </div>
           ))}
         </div>
+      )}
 
-        {/* PHOTOS (Paginated) */}
-        <div className="grid grid-cols-6 w-full max-w-6xl gap-2 mt-10">
+      {!loading && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 w-full max-w-6xl gap-2 mt-10">
           {currentPhotos.map((photo) => (
             <div
               key={photo.id}
               className="border border-gray-500 rounded-2xl bg-gray-700 hover:bg-gray-600 p-2 flex flex-col items-center"
             >
               <img
-                className="rounded-lg mb-2"
+                className="rounded-lg mb-2 w-full object-cover"
                 src={photo.thumbnailUrl}
                 alt={photo.title}
               />
-              <p className="text-xs text-gray-200 text-center">{photo.title}</p>
+              <p className="text-xs text-gray-200 text-center line-clamp-2">{photo.title}</p>
             </div>
           ))}
         </div>
+      )}
 
-        {/* PAGINATION CONTROLS */}
+      {!loading && photos.length > 0 && (
         <div className="flex items-center justify-center gap-4 mt-6">
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 disabled:opacity-50"
+            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
           </button>
@@ -143,16 +158,15 @@ function App() {
           <button
             onClick={goToNextPage}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 disabled:opacity-50"
+            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>
         </div>
+      )}
 
-        {/* ERROR */}
-        {error && <div className="text-red-500 text-center col-span-full mt-4">{error}</div>}
-      </div>
-    </>
+      {error && <div className="text-red-500 text-center mt-4">{error}</div>}
+    </div>
   )
 }
 
