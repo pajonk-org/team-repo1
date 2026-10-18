@@ -4,15 +4,21 @@ name: Test and Deploy React App
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
+
+  workflow_dispatch:
+    inputs:
+      comment: 
+        description: "comment required"
+        required: true
+        type: string
+        default: ""
 
 permissions:
   contents: read
 
 jobs:
   Test:
-    name: test
+    name: Test
     runs-on: self-hosted
 
     steps:
@@ -32,8 +38,30 @@ jobs:
       - name: Run Tests
         run: npm test
 
+      
+
+  Build:
+    name: Build App
+    needs: Test
+    runs-on: self-hosted
+  
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v5
+  
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+  
+      - name: Install Dependencies
+        run: npm ci
+  
       - name: Build App
         run: npm run build
+    
+
+
 
   Deploy:
     name: deploy
@@ -41,6 +69,7 @@ jobs:
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     runs-on: self-hosted
+    environment: prod
 
     steps:
       - name: Checkout Repo

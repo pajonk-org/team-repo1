@@ -88,10 +88,9 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-gray-800 p-6">
-      <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List v1</h1>
-
-      {loading && <div className="text-gray-200 text-xl my-8">Loading data...</div>}
+    <>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50] text-black p-6">
+        <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List version 1</h1>
 
       {/* USERS */}
       {!loading && (
