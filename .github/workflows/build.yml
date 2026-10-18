@@ -68,6 +68,7 @@ jobs:
     needs: [Test, Build]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: self-hosted
+    environment: prod
 
     steps:
       - name: Checkout Repo
