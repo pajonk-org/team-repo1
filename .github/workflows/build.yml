@@ -65,8 +65,9 @@ jobs:
 
   Deploy:
     name: deploy
-    needs: [Test, Build]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: Test
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
     runs-on: self-hosted
     environment: prod
 
