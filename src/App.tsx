@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-// --- TypeScript Types ---
 interface User {
   id: number
   name: string
@@ -35,7 +34,6 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1)
   const photosPerPage = 20
 
@@ -74,7 +72,6 @@ function App() {
     fetchAllData()
   }, [])
 
-  // Pagination logic
   const totalPages = Math.ceil(photos.length / photosPerPage)
   const startIndex = (currentPage - 1) * photosPerPage
   const currentPhotos = photos.slice(startIndex, startIndex + photosPerPage)
@@ -89,11 +86,10 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-gray-800 p-6">
-      <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List v1</h1>
+      <h1 className="text-4xl font-bold text-gray-200 mb-6">Users List v2</h1>
 
       {loading && <div className="text-gray-200 text-xl my-8">Loading data...</div>}
 
-      {/* USERS */}
       {!loading && (
         <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {users.map((user) => (
@@ -114,7 +110,6 @@ function App() {
         </div>
       )}
 
-      {/* ALBUMS */}
       {!loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 w-full max-w-6xl gap-2 mt-5">
           {albums.map((album) => (
@@ -130,7 +125,6 @@ function App() {
         </div>
       )}
 
-      {/* PHOTOS (Paginated) */}
       {!loading && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 w-full max-w-6xl gap-2 mt-10">
           {currentPhotos.map((photo) => (
@@ -149,7 +143,6 @@ function App() {
         </div>
       )}
 
-      {/* PAGINATION CONTROLS */}
       {!loading && photos.length > 0 && (
         <div className="flex items-center justify-center gap-4 mt-6">
           <button
@@ -172,7 +165,6 @@ function App() {
         </div>
       )}
 
-      {/* ERROR */}
       {error && <div className="text-red-500 text-center mt-4">{error}</div>}
     </div>
   )
